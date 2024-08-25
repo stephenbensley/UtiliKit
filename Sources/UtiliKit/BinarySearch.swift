@@ -5,12 +5,14 @@
 // license at https://github.com/stephenbensley/UtiliKit/blob/main/LICENSE.
 //
 
-extension Array {
+public extension Array {
     // Binary searches the array for a given element. If the array is not sorted, the behavior is
     // unspecified. If the value is found, returns the index of the matching element. If there are
     // multiple matches, then any one of the matches could be returned. If the value is not found,
     // then nil is returned.
-    func bsearch(for element: Self.Element) -> Self.Index?  where Element: Comparable {
+    func bsearch(
+        for element: Self.Element
+    ) -> Self.Index?  where Element: Comparable {
         bsearch(forKey: element, extractedBy: { $0 }, sortedBy: <)
     }
     
