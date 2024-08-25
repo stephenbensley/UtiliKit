@@ -2,10 +2,10 @@
 // Copyright 2024 Stephen E. Bensley
 //
 // This file is licensed under the MIT License. You may obtain a copy of the
-// license at https://github.com/stephenbensley/RGU/blob/main/LICENSE.
+// license at https://github.com/stephenbensley/UtiliKit/blob/main/LICENSE.
 //
 
-extension Array {    
+extension Array {
     // Binary searches the array for a given element. If the array is not sorted, the behavior is
     // unspecified. If the value is found, returns the index of the matching element. If there are
     // multiple matches, then any one of the matches could be returned. If the value is not found,
