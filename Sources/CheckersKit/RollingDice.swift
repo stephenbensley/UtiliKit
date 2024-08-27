@@ -63,6 +63,23 @@ public class RollingDie: SKSpriteNode {
     }
 }
 
+public class MultiComplete {
+    private var outstanding: Int
+    private var completion: (() -> Void)
+
+    public init(waitCount: Int, completion: @escaping () -> Void) {
+        self.outstanding = waitCount
+        self.completion = completion
+    }
+
+    public func complete() {
+        assert(outstanding > 0)
+        outstanding -= 1
+        guard outstanding == 0 else { return }
+        completion()
+    }
+}
+
 public class RollingDice: SKShapeNode {
     public static let lineWidth: CGFloat = 3.0
     public static let cornerRadius: CGFloat = 2.0
@@ -80,10 +97,7 @@ public class RollingDice: SKShapeNode {
     private let dice: [RollingDie]
     private var newValues: [Int]? = nil
     private var completion: (() -> Void)? = nil
-    private var rollingCount = 0
  
-    public var isIdle: Bool { newValues == nil && completion == nil && rollingCount == 0 }
-
     public override var isUserInteractionEnabled: Bool {
         get { true }
         set { }
@@ -112,36 +126,18 @@ public class RollingDice: SKShapeNode {
     }
     
     public func roll(newValues: [Int], completion: @escaping () -> Void) {
-        guard isIdle else { return }
-        
-        self.completion = completion
-        
+        let multiComplete = MultiComplete(waitCount: dice.count, completion: completion)
         zip(dice, newValues).forEach { die, roll in
-            rollingCount += 1
-            die.roll(newValue: roll) {
-                self.rollComplete()
-            }
+            die.roll(newValue: roll, completion: multiComplete.complete)
         }
     }
 
     public func rollOnTap(newValues: [Int], completion: @escaping () -> Void) {
-        guard isIdle else { return }
-
         self.indicator.strokeColor = GamePalette.selected
         self.newValues = newValues
         self.completion = completion
     }
 
-    private func rollComplete() {
-        rollingCount -= 1
-        guard rollingCount == 0 else { return }
-
-        guard let completion = completion else { return }
-        self.completion = nil
-
-        completion()
-    }
-    
     private func touchDown(location: CGPoint) {
         guard let newValues = self.newValues, let completion = self.completion else { return }
         self.newValues = nil
