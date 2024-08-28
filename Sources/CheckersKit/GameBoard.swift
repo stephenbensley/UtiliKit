@@ -9,8 +9,13 @@ import SpriteKit
 
 public class GameBoard: SKSpriteNode {
     public struct Move: Equatable {
-        let from: CGPoint
-        let to: CGPoint
+        public let from: CGPoint
+        public let to: CGPoint
+        
+        public init(from: CGPoint, to: CGPoint) {
+            self.from = from
+            self.to = to
+        }
     }
     public typealias OnMoveSelected = (Int) -> Void
     
@@ -24,8 +29,7 @@ public class GameBoard: SKSpriteNode {
     }
     
     private var acceptInput: Bool { !allowedMoves.isEmpty }
-    
-    
+
     public init(onMoveSelected: @escaping OnMoveSelected) {
         self.onMoveSelected = onMoveSelected
         let texture = SKTexture(imageNamed: "gameboard")
@@ -45,6 +49,10 @@ public class GameBoard: SKSpriteNode {
         positions.forEach { addChild(BoardTarget(position: $0)) }
     }
     
+    public func selectMove(moves: [Move]) {
+        allowedMoves = moves
+    }
+
     private func onCheckerTouched(checker: Checker) {
         // If he touched the the piece that's already selected, it's a no-op.
         guard checker != selected else {
@@ -52,7 +60,7 @@ public class GameBoard: SKSpriteNode {
         }
         
         // If the checker is both selected && threatened, then it's really a target.
-        guard checker.selected && checker.threatened else {
+        guard !checker.selected || !checker.threatened else {
             moveSelected(to: checker.position)
             return
         }

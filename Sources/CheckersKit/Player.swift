@@ -5,7 +5,7 @@
 // license at https://github.com/stephenbensley/UtiliKit/blob/main/LICENSE.
 //
 
-public enum PlayerColor: Int, CaseIterable, Codable {
+public enum PlayerColor: Int, CaseIterable, Codable, CustomStringConvertible {
     case white
     case black
     
@@ -19,6 +19,15 @@ public enum PlayerColor: Int, CaseIterable, Codable {
         }
     }
     
+    public var description: String {
+        switch self {
+        case .white:
+            return "White"
+        case .black:
+            return "Black"
+        }
+    }
+
     // Choose a color at random -- useful for starting the game.
     public static var random: Self { allCases.randomElement() ?? .white }
 }

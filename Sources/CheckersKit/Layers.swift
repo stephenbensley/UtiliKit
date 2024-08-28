@@ -13,4 +13,5 @@ public struct Layer {
     public static let targets:   CGFloat = 10.0
     public static let checkers:  CGFloat = 20.0
     public static let dice:      CGFloat = 20.0
+    public static let alerts:    CGFloat = 50.0
 }
