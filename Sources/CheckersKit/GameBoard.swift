@@ -17,21 +17,20 @@ public class GameBoard: SKSpriteNode {
             self.to = to
         }
     }
+    
     public typealias OnMoveSelected = (Int) -> Void
     
-    private let onMoveSelected: OnMoveSelected
-    private var allowedMoves = [Move]()
-    private var selected: Checker? = nil
+    private var player = PlayerColor.white
+    private var moves = [Move]()
+    private var onMoveSelected: OnMoveSelected? = nil
+    private var selection: Checker? = nil
     
     public override var isUserInteractionEnabled: Bool {
         get { true }
         set { }
     }
     
-    private var acceptInput: Bool { !allowedMoves.isEmpty }
-
-    public init(onMoveSelected: @escaping OnMoveSelected) {
-        self.onMoveSelected = onMoveSelected
+    public init() {
         let texture = SKTexture(imageNamed: "gameboard")
         super.init(texture: texture, color: .clear, size: texture.size())
         self.zPosition = Layer.gameboard
@@ -41,39 +40,64 @@ public class GameBoard: SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func addCheckers(for player: PlayerColor, positions: [CGPoint]) {
-        positions.forEach { addChild(Checker(player: player, position: $0)) }
+    public func addChecker(for player: PlayerColor, at position: CGPoint) {
+        addChild(Checker(player: player, position: position))
     }
     
-    public func addTargets(positions: [CGPoint]) {
-        positions.forEach { addChild(BoardTarget(position: $0)) }
+    public func addTarget(at position: CGPoint) {
+        addChild(BoardTarget(position: position))
     }
     
-    public func selectMove(moves: [Move]) {
-        allowedMoves = moves
+    public func selectMove(
+        for player: PlayerColor,
+        moves: [Move],
+        onMoveSelected: @escaping OnMoveSelected
+    ) {
+        self.player = player
+        self.moves = moves
+        self.onMoveSelected = onMoveSelected
+        
+        // Do all moves originate with the same checker?
+        guard let first = moves.first?.from else { return }
+        guard moves.allSatisfy({ $0.from == first }) else { return }
+        
+        // Yes, so preselect that checker
+        guard let checker = atPoint(first) as? Checker else { return }
+        onCheckerTouched(checker: checker)
     }
-
+    
     private func onCheckerTouched(checker: Checker) {
-        // If he touched the the piece that's already selected, it's a no-op.
-        guard checker != selected else {
+        // Touching the current selection, is a no-op.
+        guard checker != selection else {
             return
         }
         
-        // If the checker is both selected && threatened, then it's really a target.
-        guard !checker.selected || !checker.threatened else {
-            moveSelected(to: checker.position)
+        // Is it the opponent's checker?
+        if checker.player != player {
+            // If the checker is selected, then it's really a target. Otherwise, just ignore.
+            if checker.selected {
+                moveSelected(to: checker.position)
+            }
             return
         }
         
         // Clear the existing selection.
         deselectAll()
         
+        // Get the moves for this checker only.
+        let moves = moves.filter({ $0.from == checker.position })
+        
+        // If the checker has no moves available, there's nothing to do.
+        guard !moves.isEmpty else {
+            return
+        }
+        
         // Highlight the new selection
-        selected = checker
+        selection = checker
         checker.selected = true
         
         // Highlight all the moves for the new selection.
-        allowedMoves.filter({ $0.from == checker.position }).forEach {
+        moves.forEach {
             let node = atPoint($0.to)
             if let checker = node as? Checker {
                 checker.selected = true
@@ -94,17 +118,20 @@ public class GameBoard: SKSpriteNode {
     
     private func moveSelected(to: CGPoint) {
         // Guaranteed to be set since a move has been selected.
-        let from = selected?.position ?? .init()
+        let from = selection?.position ?? .init()
         
         // Clear the selection since the player's turn is over.
         deselectAll()
         
-        // Stop accepting moves.
-        allowedMoves = []
+        // Save the info we need to dispatch the completion notification
+        let onMoveSelected = self.onMoveSelected
+        let index = moves.firstIndex(of: Move(from: from, to: to)) ?? 0
         
-        // Process the move.
-        let index = allowedMoves.firstIndex(of: Move(from: from, to: to)) ?? 0
-        onMoveSelected(index)
+        // Stop accepting moves.
+        self.moves = []
+        self.onMoveSelected = nil
+        
+        onMoveSelected?(index)
     }
     
     private func deselectAll() {
@@ -116,7 +143,7 @@ public class GameBoard: SKSpriteNode {
                 (child as? BoardTarget)?.selected = false
             }
         }
-        selected = nil
+        selection = nil
     }
     
     private func touchDown(location: CGPoint) {
