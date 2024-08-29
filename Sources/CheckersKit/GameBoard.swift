@@ -26,15 +26,15 @@ public class GameBoard: SKSpriteNode {
         }
     }
     
-    // Used to signal that the user has selected a move.
-    public typealias OnMoveSelected = (Checker, Move) -> Void
+    // Used to signal that the user has picked a move.
+    public typealias OnMovePicked = (Checker, Move) -> Void
     
     // Player currently selecting a move.
     private var currentPlayer = PlayerColor.white
     // List of moves the player may choose from.
     private var moves = [Move]()
     // Callback invoked when the user has made a selection
-    private var onMoveSelected: OnMoveSelected? = nil
+    private var onMovePicked: OnMovePicked? = nil
     // Currently selected checker, if any. This is the source of the move.
     private var selection: Checker? = nil
     
@@ -66,14 +66,14 @@ public class GameBoard: SKSpriteNode {
     }
     
     // Initiates move selection by the player.
-    public func selectMove(
+    public func pickMove(
         for player: PlayerColor,
         moves: [Move],
-        onMoveSelected: @escaping OnMoveSelected
+        onMovePicked: @escaping OnMovePicked
     ) {
         self.currentPlayer = player
         self.moves = moves
-        self.onMoveSelected = onMoveSelected
+        self.onMovePicked = onMovePicked
         
         // Do all moves originate with the same checker?
         guard let first = moves.first?.from else { return }
@@ -90,7 +90,7 @@ public class GameBoard: SKSpriteNode {
         guard checker != selection else { return }
         
         // If the checker is selected (but isn't the selection), then it's really a target.
-        guard !checker.selected else { return moveSelected(to: checker.position) }
+        guard !checker.selected else { return movePicked(to: checker.position) }
         
         // Ignore touches of the opponent's checkers.
         guard checker.player == currentPlayer else { return }
@@ -125,13 +125,13 @@ public class GameBoard: SKSpriteNode {
     private func onTargetTouched(target: BoardTarget) {
         // Check if this is a legal move.
         guard target.selected else { return }
-        moveSelected(to: target.position)
+        movePicked(to: target.position)
     }
     
     // Called when the user has made a valid move selection.
-    private func moveSelected(to: CGPoint) {
+    private func movePicked(to: CGPoint) {
         // Make sure we have everything we need to dispatch the completion.
-        guard let onMoveSelected = onMoveSelected,
+        guard let onMovePicked = onMovePicked,
               let checker = selection,
               let move = moves.first(where: {
                   $0 == Move(from: checker.position, to: to)
@@ -144,10 +144,10 @@ public class GameBoard: SKSpriteNode {
         
         // Stop accepting moves.
         self.moves = []
-        self.onMoveSelected = nil
+        self.onMovePicked = nil
         
         // Notify the client.
-        onMoveSelected(checker, move)
+        onMovePicked(checker, move)
     }
     
     // Deslect all items on the gameboard, checkers and targets.

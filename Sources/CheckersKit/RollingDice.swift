@@ -21,15 +21,6 @@ public class RollingDie: SKSpriteNode {
     public static let rollRotations: CGFloat = 2
     private static let dieTextures = loadTextures()
     
-    // The value of the die. This is the index into the dieTextures array, not the human-
-    // readable value.
-    public var value = 0 {
-        didSet {
-            precondition(value < Self.dieTextures.count)
-            texture = Self.dieTextures[value]
-        }
-    }
-    
     // Size of the die -- assumes all textures are the same size.
     public static var size: CGSize { dieTextures.first?.size() ?? .init() }
     
@@ -50,18 +41,26 @@ public class RollingDie: SKSpriteNode {
     
     // Animates the die rolling.
     public func roll(newValue: Int, completion: @escaping () -> Void) {
+        precondition(newValue < Self.dieTextures.count)
+        let texture = Self.dieTextures[newValue]
         run(
             SKAction.sequence([
                 SKAction.rotate(
                     byAngle: -2.0 * .pi * Self.rollRotations,
                     duration: Self.rollDuration
                 ),
-                SKAction.run { [unowned self] in self.value = newValue }
+                SKAction.setTexture(texture)
             ]),
             completion: completion
         )
     }
     
+    // Update the value without animation.
+    public func setValue(_ newValue: Int) {
+        precondition(newValue < Self.dieTextures.count)
+        texture = Self.dieTextures[newValue]
+    }
+
     private static func loadTextures() -> [SKTexture] {
         var result = [SKTexture]()
         var value = 0
@@ -144,7 +143,7 @@ public class RollingDice: SKShapeNode {
 
     // Update the values without animation.
     public func setValues(_ newValues: [Int]) {
-        zip(dice, newValues).forEach {  $0.value = $1 }
+        zip(dice, newValues).forEach {  $0.setValue($1) }
     }
 
     // Handles the user touching the dice.

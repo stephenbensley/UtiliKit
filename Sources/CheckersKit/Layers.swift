@@ -5,7 +5,7 @@
 // license at https://github.com/stephenbensley/UtiliKit/blob/main/LICENSE.
 //
 
-import Foundation
+import SpriteKit
 
 // Defines the zPosition for various uses.
 public struct Layer {
@@ -25,4 +25,10 @@ public struct Layer {
     public static let moving:    CGFloat = 40.0
     // Text alert displayed to the user
     public static let alerts:    CGFloat = 50.0
+}
+
+extension SKAction {
+    static func setLayer(_ layer: CGFloat, onTarget node: SKNode) -> SKAction {
+        SKAction.run { [weak node] in node?.zPosition = layer }
+    }
 }
