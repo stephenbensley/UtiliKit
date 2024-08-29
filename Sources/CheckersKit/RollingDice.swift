@@ -143,18 +143,23 @@ public class RollingDice: SKShapeNode {
 
     // Update the values without animation.
     public func setValues(_ newValues: [Int]) {
+        stopAcceptingInput()
         zip(dice, newValues).forEach {  $0.setValue($1) }
     }
 
+    private func stopAcceptingInput() {
+        self.indicator.strokeColor = .clear
+        self.newValues = nil
+        self.completion = nil
+    }
+    
     // Handles the user touching the dice.
     private func touchDown(location: CGPoint) {
         // Save what we need.
         guard let newValues = newValues, let completion = completion else { return }
         
         // Stop accepting input.
-        self.indicator.strokeColor = .clear
-        self.newValues = nil
-        self.completion = nil
+        stopAcceptingInput()
 
         // Trigger the animation.
         roll(newValues: newValues, completion: completion)

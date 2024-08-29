@@ -65,6 +65,16 @@ public class GameBoard: SKSpriteNode {
         atPoint(position) as? Checker
     }
     
+    // Clears the board to start a new game.
+    public func clear() {
+        for child in children {
+            if let checker = child as? Checker {
+                checker.removeFromParent()
+            }
+        }
+        deselectAll()
+    }
+
     // Initiates move selection by the player.
     public func pickMove(
         for player: PlayerColor,
