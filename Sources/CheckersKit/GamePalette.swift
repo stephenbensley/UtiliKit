@@ -15,8 +15,9 @@ import UIKit
 public typealias BoardGameColor = UIColor
 #endif
 
+// Common colors used across CheckersKit.
 public struct GamePalette {
     public static let background = BoardGameColor(Color("background"))
-    public static let selected = BoardGameColor(Color("selected"))
+    public static let selected   = BoardGameColor(Color("selected"))
     public static let threatened = BoardGameColor(Color("threatened"))
 }

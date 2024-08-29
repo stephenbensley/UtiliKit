@@ -5,6 +5,7 @@
 // license at https://github.com/stephenbensley/UtiliKit/blob/main/LICENSE.
 //
 
+// Player color -- for checkers there are always exactly two players.
 public enum PlayerColor: Int, CaseIterable, Codable, CustomStringConvertible {
     case white
     case black
@@ -19,6 +20,7 @@ public enum PlayerColor: Int, CaseIterable, Codable, CustomStringConvertible {
         }
     }
     
+    // Display the color as a string.
     public var description: String {
         switch self {
         case .white:
@@ -27,11 +29,9 @@ public enum PlayerColor: Int, CaseIterable, Codable, CustomStringConvertible {
             return "Black"
         }
     }
-
-    // Choose a color at random -- useful for starting the game.
-    public static var random: Self { allCases.randomElement() ?? .white }
 }
 
+// Is the player a human or a computer?
 public enum PlayerType: Int, Codable {
     case human
     case computer

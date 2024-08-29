@@ -7,6 +7,7 @@
 
 import SpriteKit
 
+// Displays a text alert that automatically fades out after a short time.
 public class AutoAlert: SKNode {
     public static let size = CGSize(width: 225.0, height: 75.0)
     public static let cornerRadius:CGFloat = 18.0
@@ -15,7 +16,7 @@ public class AutoAlert: SKNode {
     public static let fontName = "Helvetica"
     public static let fontSize: CGFloat = 20.0
     
-    public init(_ label: String) {
+    public init(_ text: String) {
         super.init()
         self.alpha = 0.0
         self.zPosition = Layer.alerts
@@ -25,7 +26,7 @@ public class AutoAlert: SKNode {
         background.lineWidth = Self.lineWidth
         addChild(background)
         
-        let text = SKLabelNode(text: label)
+        let text = SKLabelNode(text: text)
         text.fontName = Self.fontName
         text.fontSize = Self.fontSize
         text.verticalAlignmentMode = .center
@@ -40,8 +41,8 @@ public class AutoAlert: SKNode {
         run(SKAction.sequence([
             SKAction.wait(forDuration: 0.25),
             SKAction.fadeIn(withDuration: 0.25),
-            SKAction.wait(forDuration: 2.0),
-            SKAction.fadeOut(withDuration: 0.50),
+            SKAction.wait(forDuration: 1.5),
+            SKAction.fadeOut(withDuration: 0.35),
             SKAction.removeFromParent()
         ]),
             completion: completion

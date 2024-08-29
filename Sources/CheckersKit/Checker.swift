@@ -7,23 +7,27 @@
 
 import SpriteKit
 
+// A checker playing piece.
 public class Checker: SKSpriteNode {
     public static let indicatorWidth: CGFloat = 5.0
     private static let blackTexture = SKTexture(imageNamed: "blackChecker")
     private static let whiteTexture = SKTexture(imageNamed: "whiteChecker")
 
+    // Color of the checker.
     public let player: PlayerColor
+    // True if the checker is selected for the current move.
     public var selected: Bool = false {
         didSet { updateFillColor() }
     }
+    // True if the checker is threatened by the current move (i.e., would be captured).
     public var threatened: Bool = false {
         didSet { updateFillColor() }
     }
+    // Used to display an indicator 'halo' around the checker.
     private let indicator: SKShapeNode
     
     public init(player: PlayerColor, position: CGPoint) {
-        self.player = player
-        
+        // Texture is determined by color.
         let texture: SKTexture
         switch player {
         case .black:
@@ -31,12 +35,12 @@ public class Checker: SKSpriteNode {
         case .white:
             texture = Self.whiteTexture
         }
-        
+        // Assume the checker is a circle that fills the entire texture.
         let checkerRadius = texture.size().width / 2.0
+
+        self.player = player
         self.indicator = SKShapeNode(circleOfRadius: checkerRadius + Self.indicatorWidth)
-        
         super.init(texture: texture, color: .clear, size: texture.size())
-        
         self.position = position
         self.zPosition = Layer.checkers
         
@@ -49,6 +53,7 @@ public class Checker: SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // threatened takes priority over selected when indicating state.
     private func updateFillColor() {
         switch (selected, threatened) {
         case (false, false):

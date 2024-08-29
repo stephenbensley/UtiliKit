@@ -7,6 +7,8 @@
 
 import CoreGraphics
 
+// Assorted useful extensions to CoreGraphics types
+
 public extension CGPoint {
     var reflectedOverX: Self { .init(x: +x, y: -y) }
     var reflectedOverY: Self { .init(x: -x, y: +y) }
