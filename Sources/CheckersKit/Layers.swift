@@ -27,7 +27,7 @@ public struct Layer {
     public static let alerts:    CGFloat = 50.0
 }
 
-extension SKAction {
+public extension SKAction {
     static func setLayer(_ layer: CGFloat, onTarget node: SKNode) -> SKAction {
         SKAction.run { [weak node] in node?.zPosition = layer }
     }
