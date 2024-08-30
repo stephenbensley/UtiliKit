@@ -10,13 +10,18 @@ import SpriteKit
 // Simple button implemented in SpriteKit
 public class SKButton: SKNode {
     public static let cornerRadius = 20.0
-    public static let lineWidth = 5.0
+    public static let lineWidth = 4.0
     public static let fontName: String = "Helvetica"
     public static let fontSize: CGFloat = 20.0
     
     // Action invoked when the button is released.
-    private let action: () -> Void
+    public var action: (() -> Void)?
     
+    // Is user input enabled?
+    public var enabled: Bool = true {
+        didSet { alpha = enabled ? 1.0 : 0.6 }
+    }
+
     // Used to indicate the button has been pressed, but not released.
     private var pressed: Bool = false {
         didSet { alpha = pressed ? 0.6 : 1.0 }
@@ -27,10 +32,9 @@ public class SKButton: SKNode {
         set { }
     }
     
-    public init(_ label: String, size: CGSize, action: @escaping () -> Void) {
-        self.action = action
+    public init(_ label: String, size: CGSize) {
         super.init()
-        self.zPosition = Layer.gameboard
+        self.zPosition = Layer.controls
         
         let shape = SKShapeNode(rectOf: size, cornerRadius: Self.cornerRadius)
         shape.lineWidth = Self.lineWidth
@@ -48,12 +52,14 @@ public class SKButton: SKNode {
     }
     
     private func touchDown(location: CGPoint) {
+        guard enabled else { return }
         pressed = true
     }
     
     private func touchUp(location: CGPoint) {
+        guard enabled else { return }
         pressed = false
-        action()
+        action?()
     }
     
 #if os(macOS)
