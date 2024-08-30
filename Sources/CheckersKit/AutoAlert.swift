@@ -42,7 +42,10 @@ public class AutoAlert: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func display(forDuration duration: TimeInterval, completion: @escaping () -> Void) {
+    public func display(
+        forDuration duration: TimeInterval,
+        completion: @escaping () -> Void = { }
+    ) {
         run(SKAction.sequence([
             SKAction.wait(forDuration: 0.25),
             SKAction.fadeIn(withDuration: 0.25),

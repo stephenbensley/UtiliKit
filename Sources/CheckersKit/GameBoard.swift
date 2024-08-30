@@ -29,6 +29,8 @@ public class GameBoard: SKSpriteNode {
     // Used to signal that the user has picked a move.
     public typealias OnMovePicked = (Checker, Move) -> Void
     
+    // Can be used to temporarily disable input.
+    public var inputEnabled = true
     // Player currently selecting a move.
     private var currentPlayer = PlayerColor.white
     // List of moves the player may choose from.
@@ -175,6 +177,8 @@ public class GameBoard: SKSpriteNode {
     
     // Dispatches touchDown events to the right handler.
     private func touchDown(location: CGPoint) {
+        guard inputEnabled else { return }
+
         let node = atPoint(location)
         if let checker = node as? Checker {
             onCheckerTouched(checker: checker)
