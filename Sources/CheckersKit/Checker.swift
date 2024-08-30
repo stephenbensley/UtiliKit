@@ -45,6 +45,7 @@ public class Checker: SKSpriteNode {
         self.zPosition = Layer.checkers
         
         indicator.strokeColor = .clear
+        // Put this behind the checker, so it won't intercept touches.
         indicator.zPosition = -1.0
         addChild(indicator)
     }

@@ -29,6 +29,7 @@ public class BoardTarget: SKSpriteNode {
         self.zRotation = Self.zRotation
 
         indicator.strokeColor = .clear
+        // Put this behind the target, so it won't intercept touches.
         indicator.zPosition = -1.0
         addChild(indicator)
     }
