@@ -87,7 +87,7 @@ public class RollingDice: SKShapeNode {
         case vertical
     }
     
-    // Used to highlight the dice when waiting for user input.
+    // Used to highlight the dice -- useful to indicate whose turn it is.
     private let indicator: SKShapeNode
     // Individual RollingDie making up the set.
     private let dice: [RollingDie]

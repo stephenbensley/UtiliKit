@@ -34,7 +34,7 @@ public class GameBoard: SKSpriteNode {
     // Player currently selecting a move.
     private var currentPlayer = PlayerColor.white
     // List of moves the player may choose from.
-    private var moves = [Move]()
+    private var allowedMoves = [Move]()
     // Callback invoked when the user has made a selection
     private var onMovePicked: OnMovePicked? = nil
     // Currently selected checker, if any. This is the source of the move.
@@ -55,14 +55,6 @@ public class GameBoard: SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func addChecker(for player: PlayerColor, at position: CGPoint) {
-        addChild(Checker(player: player, position: position))
-    }
-    
-    public func addTarget(at position: CGPoint) {
-        addChild(BoardTarget(position: position))
-    }
-    
     public func checker(at position: CGPoint) -> Checker? {
         atPoint(position) as? Checker
     }
@@ -80,16 +72,16 @@ public class GameBoard: SKSpriteNode {
     // Initiates move selection by the player.
     public func pickMove(
         for player: PlayerColor,
-        moves: [Move],
+        allowedMoves: [Move],
         onMovePicked: @escaping OnMovePicked
     ) {
         self.currentPlayer = player
-        self.moves = moves
+        self.allowedMoves = allowedMoves
         self.onMovePicked = onMovePicked
         
         // Do all moves originate with the same checker?
-        guard let first = moves.first?.from else { return }
-        guard moves.allSatisfy({ $0.from == first }) else { return }
+        guard let first = allowedMoves.first?.from else { return }
+        guard allowedMoves.allSatisfy({ $0.from == first }) else { return }
         
         // Yes, so preselect that checker
         guard let checker = checker(at: first) else { return }
@@ -111,7 +103,7 @@ public class GameBoard: SKSpriteNode {
         deselectAll()
         
         // Get the moves for this checker only.
-        let moves = moves.filter({ $0.from == checker.position })
+        let moves = allowedMoves.filter({ $0.from == checker.position })
         
         // If the checker has no moves available, there's nothing to do.
         guard !moves.isEmpty else { return }
@@ -145,7 +137,7 @@ public class GameBoard: SKSpriteNode {
         // Make sure we have everything we need to dispatch the completion.
         guard let onMovePicked = onMovePicked,
               let checker = selection,
-              let move = moves.first(where: {
+              let move = allowedMoves.first(where: {
                   $0 == Move(from: checker.position, to: to)
               }) else {
             return
@@ -155,7 +147,7 @@ public class GameBoard: SKSpriteNode {
         deselectAll()
         
         // Stop accepting moves.
-        self.moves = []
+        self.allowedMoves = []
         self.onMovePicked = nil
         
         // Notify the client.

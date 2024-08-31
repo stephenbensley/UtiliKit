@@ -26,7 +26,7 @@ public class Checker: SKSpriteNode {
     // Used to display an indicator 'halo' around the checker.
     private let indicator: SKShapeNode
     
-    public init(player: PlayerColor, position: CGPoint) {
+    public init(player: PlayerColor) {
         // Texture is determined by color.
         let texture: SKTexture
         switch player {
@@ -41,7 +41,6 @@ public class Checker: SKSpriteNode {
         self.player = player
         self.indicator = SKShapeNode(circleOfRadius: checkerRadius + Self.indicatorWidth)
         super.init(texture: texture, color: .clear, size: texture.size())
-        self.position = position
         self.zPosition = Layer.checkers
         
         indicator.strokeColor = .clear
