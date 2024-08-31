@@ -47,10 +47,10 @@ public class AutoAlert: SKNode {
         completion: @escaping () -> Void = { }
     ) {
         run(SKAction.sequence([
-            SKAction.wait(forDuration: 0.25),
-            SKAction.fadeIn(withDuration: 0.25),
+            SKAction.wait(forDuration: 0.2),
+            SKAction.fadeIn(withDuration: 0.2),
             SKAction.wait(forDuration: duration),
-            SKAction.fadeOut(withDuration: 0.35),
+            SKAction.fadeOut(withDuration: 0.3),
             SKAction.removeFromParent()
         ]),
             completion: completion

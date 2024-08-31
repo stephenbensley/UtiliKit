@@ -16,11 +16,12 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "CheckersKit"),
+            name: "CheckersKit",
+            dependencies: ["UtiliKit"]),
         .target(
             name: "UtiliKit"),
         .testTarget(
             name: "UtiliKitTests",
-            dependencies: ["UtiliKit"]),
+            dependencies: ["UtiliKit"])
     ]
 )

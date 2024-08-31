@@ -78,7 +78,7 @@ public class RollingDie: SKSpriteNode {
 public class RollingDice: SKShapeNode {
     public static let lineWidth: CGFloat = 3.0
     public static let cornerRadius: CGFloat = 2.0
-    public static let padding: CGFloat = 5.0
+    public static let padding: CGFloat = 10.0
     public static let spacing: CGFloat = 10.0
     
     // The dice are presented in a line, either horizontal or vertical.
@@ -86,22 +86,17 @@ public class RollingDice: SKShapeNode {
         case horizontal
         case vertical
     }
-    public typealias OnComplete = () -> Void
     
     // Used to highlight the dice when waiting for user input.
     private let indicator: SKShapeNode
     // Individual RollingDie making up the set.
     private let dice: [RollingDie]
-    // New values that will be set when the user initiates a roll.
-    private var newValues: [Int]? = nil
-    // Callback invoked when the roll animation is complete.
-    private var completion: (() -> Void)? = nil
  
-    public override var isUserInteractionEnabled: Bool {
-        get { true }
-        set { }
+    public var selected: Bool {
+        get { indicator.strokeColor != .clear }
+        set { indicator.strokeColor = newValue ? GamePalette.selected : .clear }
     }
-    
+
     public init(diceCount: Int, orientation: Orientation) {
         assert(diceCount > 0)
         
@@ -126,7 +121,7 @@ public class RollingDice: SKShapeNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // Roll the dice immediately.
+    // Roll the dice with animation.
     public func roll(newValues: [Int], completion: @escaping () -> Void) {
         let multiComplete = MultiComplete(waitCount: dice.count, completion: completion)
         zip(dice, newValues).forEach { die, roll in
@@ -134,37 +129,11 @@ public class RollingDice: SKShapeNode {
         }
     }
 
-    // Roll the dice once the user taps on them.
-    public func rollOnTap(newValues: [Int], completion: @escaping () -> Void) {
-        self.indicator.strokeColor = GamePalette.selected
-        self.newValues = newValues
-        self.completion = completion
-    }
-
     // Update the values without animation.
     public func setValues(_ newValues: [Int]) {
-        stopAcceptingInput()
         zip(dice, newValues).forEach {  $0.setValue($1) }
     }
 
-    private func stopAcceptingInput() {
-        self.indicator.strokeColor = .clear
-        self.newValues = nil
-        self.completion = nil
-    }
-    
-    // Handles the user touching the dice.
-    private func touchDown(location: CGPoint) {
-        // Save what we need.
-        guard let newValues = newValues, let completion = completion else { return }
-        
-        // Stop accepting input.
-        stopAcceptingInput()
-
-        // Trigger the animation.
-        roll(newValues: newValues, completion: completion)
-    }
-    
     // Calculates the length of a row or column of dice accounting for spacing & padding.
     private static func length(diceCount: Int, diceLength: Double) -> Double {
         diceLength * Double(diceCount) + spacing * Double(diceCount - 1) + 2.0 * padding
@@ -214,14 +183,4 @@ public class RollingDice: SKShapeNode {
             )
         }
     }
-    
-#if os(macOS)
-    public override func mouseDown(with event: NSEvent) {
-        touchDown(location: event.location(in: self))
-    }
-#else
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchDown(location: t.location(in: self))}
-    }
-#endif
 }
