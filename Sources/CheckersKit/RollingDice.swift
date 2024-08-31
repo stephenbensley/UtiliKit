@@ -77,7 +77,7 @@ public class RollingDie: SKSpriteNode {
 // Visual representation of a set of rolling dice.
 public class RollingDice: SKShapeNode {
     public static let lineWidth: CGFloat = 3.0
-    public static let cornerRadius: CGFloat = 2.0
+    public static let cornerRadius: CGFloat = 3.0
     public static let padding: CGFloat = 10.0
     public static let spacing: CGFloat = 10.0
     
