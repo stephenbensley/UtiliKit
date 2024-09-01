@@ -12,12 +12,9 @@ let package = Package(
     products: [
         .library(
             name: "UtiliKit",
-            targets: ["CheckersKit", "UtiliKit"]),
+            targets: ["UtiliKit"]),
     ],
     targets: [
-        .target(
-            name: "CheckersKit",
-            dependencies: ["UtiliKit"]),
         .target(
             name: "UtiliKit"),
         .testTarget(

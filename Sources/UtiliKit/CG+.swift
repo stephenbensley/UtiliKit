@@ -34,4 +34,3 @@ public extension Collection<CGPoint> {
     var reflectedOverX: [CGPoint] { map { $0.reflectedOverX } }
     var reflectedOverY: [CGPoint] { map { $0.reflectedOverY } }
 }
-
