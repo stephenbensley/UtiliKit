@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 // Displays a generic About page.
 public struct AboutView: View {
@@ -17,11 +16,17 @@ public struct AboutView: View {
         self.info = info
     }
 
+#if os(macOS)
+    var icon: Image { Image(nsImage: NSImage(named: "AppIcon") ?? NSImage()) }
+#else
+    var icon: Image { Image(uiImage: UIImage(named: "AppIcon") ?? UIImage()) }
+#endif
+    
     public var body: some View {
         NavigationStack {
             Form {
                 HStack(alignment: .center) {
-                    Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
+                    icon
                         .resizable()
                         .frame(width: 64, height: 64)
                         .cornerRadius(10)
