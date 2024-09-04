@@ -9,11 +9,13 @@ import SwiftUI
 
 extension View {
     // View modifier to set the color of the navigation bar title. This doesn't seem to be
-    // exposed through SwiftUI yet.
+    // exposed through SwiftUI yet. I don't know how to do this on MacOS.
     func navigationBarTitleColor(_ color: Color) -> some View {
+#if !os(macOS)
         let uiColor = UIColor(color)
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: uiColor]
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: uiColor]
+#endif
         return self
     }
 }
