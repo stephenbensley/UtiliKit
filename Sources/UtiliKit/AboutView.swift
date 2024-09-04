@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 // Displays a generic About page.
 public struct AboutView: View {

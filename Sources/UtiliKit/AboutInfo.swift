@@ -23,38 +23,38 @@ public protocol AboutInfo {
 
 // Additional info that can be derived automatically.
 public extension AboutInfo {
-    public var name: String {
+    var name: String {
         Bundle.main.infoDictionary?["CFBundleName"] as? String ?? ""
     }
 
-    public var version: String {
+    var version: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0.0"
     }
 
-    public var contact: URL {
+    var contact: URL {
         .init(string: "https://github.com/\(gitHubAccount)")!
     }
 
     // Assumes the license file is called LICENSE and is located at the root of the repo.
-    public var license: URL {
+    var license: URL {
         .init(string: "https://github.com/\(gitHubAccount)/\(gitHubRepo)/blob/main/LICENSE")!
     }
     
     // Assumes the privacy policy is called privacy.html and has been published to the root of
     // github.io.
-    public var privacyPolicy: URL {
+    var privacyPolicy: URL {
         .init(string: "https://\(gitHubAccount).github.io/\(gitHubRepo)/privacy.html")!
     }
     
-    public var share: URL {
+    var share: URL {
         .init(string: "https://apps.apple.com/us/app/id\(appStoreId)")!
     }
     
-    public var sourceCode: URL {
+    var sourceCode: URL {
         .init(string: "https://github.com/\(gitHubAccount)/\(gitHubRepo)")!
     }
     
-    public var writeReview: URL {
+    var writeReview: URL {
         .init(string: "https://apps.apple.com/us/app/id\(appStoreId)?action=write-review")!
     }
 }
