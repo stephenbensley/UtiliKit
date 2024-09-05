@@ -7,7 +7,10 @@
 
 import Foundation
 
-// Exposes app-specific properties for the app's about page or similar scenarios.
+// Exposes app-specific properties for the app's about page or similar scenarios. This protocol
+// doesn't need to run on the MainActor per se, but types that implement this protocol frequently
+// will, and it's a pain to implement a non-isolated protocol from an isolated type.
+@MainActor
 public protocol AboutInfo {
     // ID used to identify the app on the AppStore
     var appStoreId: Int { get }
