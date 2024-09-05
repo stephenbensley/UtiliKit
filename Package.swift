@@ -16,7 +16,10 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "UtiliKit"),
+            name: "UtiliKit",
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency")
+            ]),
         .testTarget(
             name: "UtiliKitTests",
             dependencies: ["UtiliKit"])
