@@ -9,7 +9,14 @@ import CoreGraphics
 
 // Assorted useful extensions to CoreGraphics types
 
+infix operator ~=: ComparisonPrecedence
+
 public extension CGPoint {
+    // Test for approximate equality. Returns true if the points are within 1/2 a pixel.
+    static func ~= (lhs: CGPoint, rhs: CGPoint) -> Bool {
+        (abs(lhs.x - rhs.x) < 0.5) && (abs(lhs.y - rhs.y) < 0.5)
+    }
+
     var reflectedOverX: Self { .init(x: +x, y: -y) }
     var reflectedOverY: Self { .init(x: -x, y: +y) }
 }
