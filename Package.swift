@@ -11,15 +11,18 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "CheckersKit",
+            targets: ["CheckersKit"]),
+        .library(
             name: "UtiliKit",
-            targets: ["UtiliKit"]),
+            targets: ["UtiliKit"])
     ],
     targets: [
         .target(
-            name: "UtiliKit",
-            swiftSettings: [
-                .enableExperimentalFeature("StrictConcurrency")
-            ]),
+            name: "CheckersKit",
+            dependencies: ["UtiliKit"]),
+        .target(
+            name: "UtiliKit"),
         .testTarget(
             name: "UtiliKitTests",
             dependencies: ["UtiliKit"])
