@@ -10,7 +10,7 @@ import SwiftUI
 // Displays a generic About page.
 public struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
-    private var info: AboutInfo
+    private let info: AboutInfo
 
     public init(info: some AboutInfo) {
         self.info = info
