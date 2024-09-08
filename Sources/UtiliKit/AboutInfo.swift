@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 // Exposes app-specific properties for the app's about page or similar scenarios. This protocol
 // doesn't need to run on the MainActor per se, but types that implement this protocol frequently
@@ -33,6 +34,12 @@ public extension AboutInfo {
     var version: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0.0"
     }
+
+#if os(macOS)
+    var icon: Image { Image(nsImage: NSImage(named: "AppIcon") ?? NSImage()) }
+#else
+    var icon: Image { Image(uiImage: UIImage(named: "AppIcon") ?? UIImage()) }
+#endif
 
     var contact: URL {
         .init(string: "https://github.com/\(gitHubAccount)")!
