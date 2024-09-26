@@ -24,6 +24,22 @@ public extension CGPoint {
 public extension CGSize {
     var aspectRatio: CGFloat { height / width }
     
+    func scaled(by scaleFactor: CGFloat) -> CGSize {
+        .init(width: width * scaleFactor, height: height * scaleFactor)
+    }
+
+    func shrinkToAspectRatio(_ aspectRatio: CGFloat) -> Self {
+        var result = self
+        if aspectRatio > self.aspectRatio {
+            // Desired AR is skinnier, so shrink the width.
+            result.width = result.height / aspectRatio
+        } else {
+            // Desired AR is fatter, so shrink the height.
+            result.height = result.width * aspectRatio
+        }
+        return result
+    }
+
     func stretchToAspectRatio(_ aspectRatio: CGFloat) -> Self {
         var result = self
         if aspectRatio > self.aspectRatio {
