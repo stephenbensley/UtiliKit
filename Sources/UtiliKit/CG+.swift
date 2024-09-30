@@ -16,38 +16,38 @@ public extension CGPoint {
     static func ~= (lhs: CGPoint, rhs: CGPoint) -> Bool {
         (abs(lhs.x - rhs.x) < 0.5) && (abs(lhs.y - rhs.y) < 0.5)
     }
-
+    
     var reflectedOverX: Self { .init(x: +x, y: -y) }
     var reflectedOverY: Self { .init(x: -x, y: +y) }
 }
 
 public extension CGSize {
-    var aspectRatio: CGFloat { height / width }
+    var aspectRatio: CGFloat { width/height }
     
     func scaled(by scaleFactor: CGFloat) -> CGSize {
         .init(width: width * scaleFactor, height: height * scaleFactor)
     }
-
+    
     func shrinkToAspectRatio(_ aspectRatio: CGFloat) -> Self {
         var result = self
         if aspectRatio > self.aspectRatio {
-            // Desired AR is skinnier, so shrink the width.
-            result.width = result.height / aspectRatio
-        } else {
-            // Desired AR is fatter, so shrink the height.
+            // Desired AR is wider, so shrink the height.
             result.height = result.width * aspectRatio
+        } else {
+            // Desired AR is narrower, so shrink the width.
+            result.width = result.height / aspectRatio
         }
         return result
     }
-
+    
     func stretchToAspectRatio(_ aspectRatio: CGFloat) -> Self {
         var result = self
         if aspectRatio > self.aspectRatio {
-            // Desired AR is skinnier, so stretch the height.
-            result.height = result.width * aspectRatio
-        } else {
-            // Desired AR is fatter, so stretch the width.
+            // Desired AR is wider, so stretch the width.
             result.width = result.height / aspectRatio
+        } else {
+            // Desired AR is narrower, so stretch the height.
+            result.height = result.width * aspectRatio
         }
         return result
     }
