@@ -32,10 +32,10 @@ public extension CGSize {
         var result = self
         if aspectRatio > self.aspectRatio {
             // Desired AR is wider, so shrink the height.
-            result.height = result.width * aspectRatio
+            result.height = result.width / aspectRatio
         } else {
             // Desired AR is narrower, so shrink the width.
-            result.width = result.height / aspectRatio
+            result.width = result.height * aspectRatio
         }
         return result
     }
@@ -44,10 +44,10 @@ public extension CGSize {
         var result = self
         if aspectRatio > self.aspectRatio {
             // Desired AR is wider, so stretch the width.
-            result.width = result.height / aspectRatio
+            result.width = result.height * aspectRatio
         } else {
             // Desired AR is narrower, so stretch the height.
-            result.height = result.width * aspectRatio
+            result.height = result.width / aspectRatio
         }
         return result
     }
