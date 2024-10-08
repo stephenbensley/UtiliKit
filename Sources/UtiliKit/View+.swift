@@ -19,6 +19,11 @@ public extension View {
 #endif
         return self
     }
+
+    // Allow a frame to be specified as a CGSize
+    @inlinable nonisolated func frame(size: CGSize, alignment: Alignment = .center) -> some View {
+        frame(width: size.width, height: size.height, alignment: alignment)
+    }
 }
 
 #Preview {
