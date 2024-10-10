@@ -32,11 +32,7 @@ public extension AboutInfo {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0.0"
     }
 
-#if os(macOS)
-    var icon: Image { Image(nsImage: NSImage(named: "AppIcon") ?? NSImage()) }
-#else
-    var icon: Image { Image(uiImage: UIImage(named: "AppIcon") ?? UIImage()) }
-#endif
+    var icon: Image { Image("AppIcon") }
 
     var contact: URL {
         .init(string: "https://github.com/\(gitHubAccount)")!
